@@ -1,14 +1,15 @@
 import * as actions from '../actions/index';
 
 function intBetweenAB(A, B){
-    return Math.floor(Math.random() * (B - A)) + 1,
+    return Math.floor(Math.random() * (B - A)) + 1;
 }
 
 const initialHotOrColdState = { 
     the_number: intBetween(1, 10),
     correct: false,
     readyForNextGuess: true, // should be false while giving feedback on last guess
-    guesses: []  
+    guesses: [],
+    feedback: 'Make Your First Guess'  
 };
 
 export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
@@ -17,14 +18,26 @@ export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
     if (action.type === actions.START_NEW_GAME) {
         return state;
     }
-    else if (action.type === actions.SAVE_GUESS) {
-        console.log('todo: SAVE_GUESS')
+    else if (action.type === actions.PROCESS_GUESS) {
+        return Object.assign({}, state, state.guesses = [...state.guesses, action.guess])
     }
     else if (action.type === actions.GIVE_FEEDBACK) {
-        console.log('todo: GIVE_FEEDBACK')
+        const diff = Math.abs(state.the_number - action.guess);
+        let newFeedback;
+        switch(diff) {
+            case 0: 
+                newFeedback = 'You guessed it!';
+                state = Object.assign({}, state, state.correct = true);
+            case (diff > 0 && diff < 3):
+                newFeedback = 'Hot!';
+            case (diff > 3 && diff < 6):
+                newFeedback = 'Warm!';
+            default:
+                newFeedback = 'Cold!';
+        }
+
+        return Object.assign({}, state, state.feedback = newFeedback);
     }
 
     return state;
 };
-
-
