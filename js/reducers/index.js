@@ -1,19 +1,21 @@
 import * as actions from '../actions/index';
 
+function intBetweenAB(A, B){
+    return Math.floor(Math.random() * (B - A)) + 1,
+}
+
 const initialHotOrColdState = { 
-    the_number:null,
+    the_number: intBetween(1, 10),
     correct: false,
     readyForNextGuess: true, // should be false while giving feedback on last guess
-    guesses: [],
-    min: 1,
-    max: 10    
+    guesses: []  
 };
 
 export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
+    console.log(state);    
+
     if (action.type === actions.START_NEW_GAME) {
-        var randomInteger = Math.floor(Math.random() * (state.max - state.min + 1));
-        const newGameState = Object.assign(state, {the_number: randomInteger});
-        return newGameState;
+        return state;
     }
     else if (action.type === actions.SAVE_GUESS) {
         console.log('todo: SAVE_GUESS')
@@ -24,3 +26,5 @@ export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
 
     return state;
 };
+
+

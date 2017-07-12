@@ -2,7 +2,7 @@
 
 // start new game (after correct or in the middle of guessing)
 export const START_NEW_GAME = 'START_NEW_GAME';
-export const giveFeedback = () => ({
+export const startNewGame = () => ({
     type: START_NEW_GAME
 });
 
