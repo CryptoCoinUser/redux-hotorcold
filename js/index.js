@@ -1,10 +1,10 @@
 require('babel-polyfill');
 
-
 import * as actions from './actions/index';
+
 import hotOrColdReducer from './reducers/index';
 
-console.log(actions);
+import store from './store';
 
-hotOrColdReducer();
-//hotOrColdReducer(actions.startNewGame;
+store.dispatch(actions.startNewGame());
+console.log(store.getState()); 

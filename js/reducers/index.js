@@ -1,6 +1,6 @@
 import * as actions from '../actions/index';
 
-function intBetweenAB(A, B){
+export function intBetween(A, B){
     return Math.floor(Math.random() * (B - A)) + 1;
 }
 
