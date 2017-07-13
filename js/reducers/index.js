@@ -13,30 +13,46 @@ const initialHotOrColdState = {
 };
 
 export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
-    console.log(state);    
+       
 
     if (action.type === actions.START_NEW_GAME) {
-        return state;
+        console.log('start new game');
+        return initialHotOrColdState;
     }
     else if (action.type === actions.PROCESS_GUESS) {
-        return Object.assign({}, state, state.guesses = [...state.guesses, action.guess])
+        return {
+                ...state,
+                guesses: [...state.guesses, action.guess]
+            }
     }
-    else if (action.type === actions.GIVE_FEEDBACK) {
-        const diff = Math.abs(state.the_number - action.guess);
-        let newFeedback;
-        switch(diff) {
-            case 0: 
-                newFeedback = 'You guessed it!';
-                state = Object.assign({}, state, state.correct = true);
-            case (diff > 0 && diff < 3):
-                newFeedback = 'Hot!';
-            case (diff > 3 && diff < 6):
-                newFeedback = 'Warm!';
-            default:
-                newFeedback = 'Cold!';
-        }
+    // action that updates the correct state 
 
-        return Object.assign({}, state, state.feedback = newFeedback);
+    else if (action.type === actions.GIVE_FEEDBACK) {
+
+        const diff = Math.abs(state.the_number - action.guess);
+        console.log('reducers/index diff is ' + diff);
+        let newFeedback;
+
+        if(diff == 0){ 
+            newFeedback = 'You guessed it!';
+            state = {
+                ...state, 
+                correct: true
+            };
+        }else if(diff > 0 && diff <= 3){
+            newFeedback = 'Hot!';
+        }else if(diff > 3 && diff <= 6){
+            newFeedback = 'Warm!';
+        }else if(diff > 6){
+            newFeedback = 'Cold!';
+        } else{
+            newFeedback = 'Error in reducers/index.js: switch statement did not match any case'
+        }
+        return  {
+                    ...state, 
+                    feedback: newFeedback
+                };
+
     }
 
     return state;
