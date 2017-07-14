@@ -15,8 +15,14 @@ export const processGuess = guess => ({
 
 // give feedback to user (correct, hot, warm, cold...)
 export const GIVE_FEEDBACK = 'GIVE_FEEDBACK';
-export const giveFeedback = (guess) => ({
+export const giveFeedback = guess => ({
     type: GIVE_FEEDBACK,
     guess
+});
+
+export const REPEAT_NUMBER_ERROR = 'REPEAT_NUMBER_ERROR';
+export const repeatNumberError = repeatNumberFlag => ({
+    type: REPEAT_NUMBER_ERROR,
+    repeatNumberFlag
 });
 

@@ -9,7 +9,8 @@ const initialHotOrColdState = {
     correct: false,
     readyForNextGuess: true, // should be false while giving feedback on last guess
     guesses: [],
-    feedback: 'Make Your First Guess'  
+    feedback: 'Make Your First Guess',
+    repeatNumberError: false  
 };
 
 export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
@@ -53,6 +54,12 @@ export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
                     feedback: newFeedback
                 };
 
+    }
+    else if (action.type === actions.REPEAT_NUMBER_ERROR){
+        return  {
+            ...state, 
+            repeatNumberError: action.repeatNumberFlag
+        };
     }
 
     return state;

@@ -9,20 +9,29 @@ export class GuessForm extends React.Component {
         super(props);
         this.startNewGame = this.startNewGame.bind(this);
         this.processGuess = this.processGuess.bind(this);
-
     }
 
     startNewGame(){
         this.props.dispatch(actions.startNewGame());
-        this.guessInput.value = '';
+        if(this.guessInput){this.guessInput.value = '';}
+        
     }
 
-    processGuess() {
-        const guessed_number = this.guessInput.value;
+    processGuess(props) {
+        const guessed_number = parseInt(this.guessInput.value);
 
         if (guessed_number === ''){
           return  
         } 
+        this.props.dispatch(actions.repeatNumberError(false));
+
+        console.log(this.props.guesses);
+        console.log(guessed_number);
+        if(this.props.guesses.indexOf(guessed_number) > -1){
+            // dispatch an action 
+            this.props.dispatch(actions.repeatNumberError(true));
+            return
+        }
         
         this.props.dispatch(actions.processGuess(guessed_number));
 
@@ -64,8 +73,13 @@ export class GuessForm extends React.Component {
     
                 </form>
                 <div className="oldGuesses">
-                    <p>Your guesses:</p>
+                    {this.props.repeatNumberError ? 
+                      <p>You alredy tried that last number</p>
+                      : ''
+                    }
+                    <p>Your made {guesses.length} guesses:</p>
                     {guesses}
+
                 </div>
             </div>
         );
@@ -76,7 +90,8 @@ const mapStateToProps = (state, props) => ({
     guesses: state.guesses,
     the_number: state.the_number,
     feedback: state.feedback,
-    correct: state.correct
+    correct: state.correct,
+    repeatNumberError: state.repeatNumberError
 });
 
 export default connect(mapStateToProps)(GuessForm);
