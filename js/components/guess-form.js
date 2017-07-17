@@ -17,6 +17,19 @@ export class GuessForm extends React.Component {
         
     }
 
+    componentDidMount() {
+        this.props.dispatch(actions.fetchFewestGuesses());
+        this.props.dispatch(actions.startNewGame());
+    }
+
+    componentWillReceiveProps(){
+        const numberOfGuesses = this.props.guesses.length;
+        if(this.props.correct && (numberOfGuesses < this.props.fewestGuesses)){
+            this.props.dispatch(actions.saveFewestGuesses(numberOfGuesses));
+            this.props.dispatch(actions.fetchFewestGuesses());
+        }
+    }
+
     processGuess(props) {
         const guessed_number = parseInt(this.guessInput.value);
 
@@ -25,8 +38,6 @@ export class GuessForm extends React.Component {
         } 
         this.props.dispatch(actions.repeatNumberError(false));
 
-        console.log(this.props.guesses);
-        console.log(guessed_number);
         if(this.props.guesses.indexOf(guessed_number) > -1){
             // dispatch an action 
             this.props.dispatch(actions.repeatNumberError(true));
@@ -41,17 +52,12 @@ export class GuessForm extends React.Component {
     }
 
     giveFeedback(props) {
-        console.log('guess-form giveFeedback');
         const guessed_number = this.guessInput.value;
         const the_number = this.props.the_number;
         this.props.dispatch(actions.giveFeedback(guessed_number));
     }
 
     render() {
-        // console.log('this.props');
-        // console.log(this.props);
-        // console.log('this.props');
-        console.log("GUESS FORM", this.props);
         const guesses = this.props.guesses.map((repository, i) => {
             const lastGuess = this.props.guesses[i];
             return <Guess guessed_number={lastGuess} key={i} index={i} />;
@@ -59,6 +65,10 @@ export class GuessForm extends React.Component {
 
         return (
             <div className="guess-list">
+                {   (this.props.fewestGuesses < 99) ?
+                     <p>Current record for fewest guesses is {this.props.fewestGuesses}</p>
+                    : ""
+                }
                 <h2 className="feedback">{this.props.feedback}</h2>
                 <form>
                     { this.props.correct ? 
@@ -91,7 +101,8 @@ const mapStateToProps = (state, props) => ({
     the_number: state.the_number,
     feedback: state.feedback,
     correct: state.correct,
-    repeatNumberError: state.repeatNumberError
+    repeatNumberError: state.repeatNumberError,
+    fewestGuesses: state.fewestGuesses
 });
 
 export default connect(mapStateToProps)(GuessForm);

@@ -1,24 +1,25 @@
 import * as actions from '../actions/index';
 
-export function intBetween(A, B){
-    return Math.floor(Math.random() * (B - A)) + 1;
-}
-
 const initialHotOrColdState = { 
-    the_number: intBetween(1, 10),
+    the_number: 0,
     correct: false,
     readyForNextGuess: true, // should be false while giving feedback on last guess
     guesses: [],
     feedback: 'Make Your First Guess',
-    repeatNumberError: false  
+    repeatNumberError: false,
+    fewestGuesses: null
 };
 
 export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
        
 
     if (action.type === actions.START_NEW_GAME) {
-        console.log('start new game');
-        return initialHotOrColdState;
+        console.log("the_number is " + action.the_number);
+        return {
+            ...initialHotOrColdState, 
+             fewestGuesses: state.fewestGuesses, 
+            the_number: action.the_number
+        }
     }
     else if (action.type === actions.PROCESS_GUESS) {
         return {
@@ -31,7 +32,6 @@ export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
     else if (action.type === actions.GIVE_FEEDBACK) {
 
         const diff = Math.abs(state.the_number - action.guess);
-        console.log('reducers/index diff is ' + diff);
         let newFeedback;
 
         if(diff == 0){ 
@@ -60,6 +60,18 @@ export const hotOrColdReducer = (state=initialHotOrColdState, action) => {
             ...state, 
             repeatNumberError: action.repeatNumberFlag
         };
+    }
+
+
+    else if(action.type === actions.FETCH_FEWEST_GUESSES_SUCCESS){
+        return {
+            ...state,
+            fewestGuesses: action.fewestGuesses
+        }
+    }
+
+    else if(action.type === actions.FETCH_FEWEST_GUESSES_ERROR){
+        
     }
 
     return state;
